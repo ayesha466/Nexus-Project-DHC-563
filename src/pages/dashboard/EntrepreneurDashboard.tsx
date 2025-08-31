@@ -1,3 +1,4 @@
+import { GuidedTour } from '../../components/ui/GuidedTour';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Bell, Calendar, TrendingUp, AlertCircle, PlusCircle } from 'lucide-react';
@@ -10,8 +11,18 @@ import { useAuth } from '../../context/AuthContext';
 import { CollaborationRequest } from '../../types';
 import { getRequestsForEntrepreneur } from '../../data/collaborationRequests';
 import { investors } from '../../data/users';
+import PaymentSection from '../../components/ui/PaymentSection';
+import VideoCall from '../../components/ui/VideoCall';
+import CalendarComponent from '../../components/ui/Calendar';
 
 export const EntrepreneurDashboard: React.FC = () => {
+  // Meeting requests state
+  const [meetingRequests, setMeetingRequests] = useState<{ id: string; date: Date; time: string; status: 'pending' | 'accepted' | 'declined' }[]>([]);
+
+  // Accept/decline meeting request
+  const handleMeetingRequestUpdate = (id: string, status: 'accepted' | 'declined') => {
+    setMeetingRequests(requests => requests.map(r => r.id === id ? { ...r, status } : r));
+  };
   const { user } = useAuth();
   const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>([]);
   const [recommendedInvestors, setRecommendedInvestors] = useState(investors.slice(0, 3));
@@ -37,7 +48,14 @@ export const EntrepreneurDashboard: React.FC = () => {
   const pendingRequests = collaborationRequests.filter(req => req.status === 'pending');
   
   return (
-    <div className="space-y-6 animate-fade-in">
+  <div className="space-y-6 animate-fade-in dashboard-main">
+    <GuidedTour />
+    {/* Payment Section */}
+    <PaymentSection />
+    {/* Video Call Section */}
+    <div>
+      <VideoCall />
+    </div>
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Welcome, {user.name}</h1>
@@ -122,8 +140,8 @@ export const EntrepreneurDashboard: React.FC = () => {
               <h2 className="text-lg font-medium text-gray-900">Collaboration Requests</h2>
               <Badge variant="primary">{pendingRequests.length} pending</Badge>
             </CardHeader>
-            
             <CardBody>
+              {/* Collaboration Requests */}
               {collaborationRequests.length > 0 ? (
                 <div className="space-y-4">
                   {collaborationRequests.map(request => (
@@ -143,8 +161,38 @@ export const EntrepreneurDashboard: React.FC = () => {
                   <p className="text-sm text-gray-500 mt-1">When investors are interested in your startup, their requests will appear here</p>
                 </div>
               )}
+
+              {/* Meeting Requests */}
+              {/* <div className="mt-8 bg-gray-100 rounded-xl p-4 shadow">
+                <h3 className="text-lg text-cyan-700 mb-4 font-semibold">Meeting Requests</h3>
+                <ul>
+                  {meetingRequests.length === 0 && <li className="text-gray-400">No meeting requests yet.</li>}
+                  {meetingRequests.map(request => (
+                    <li key={request.id} className="mb-3 text-gray-900 flex justify-between items-center">
+                      <span>{request.date.toDateString()} at {request.time} -
+                        <span className="ml-2 font-bold text-cyan-700">{request.status}</span>
+                      </span>
+                      {request.status === 'pending' && (
+                        <span>
+                          <button
+                            className="ml-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg font-semibold shadow"
+                            onClick={() => handleMeetingRequestUpdate(request.id, 'accepted')}
+                          >Accept</button>
+                          <button
+                            className="ml-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg font-semibold shadow"
+                            onClick={() => handleMeetingRequestUpdate(request.id, 'declined')}
+                          >Decline</button>
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div> */}
             </CardBody>
           </Card>
+          <div className="mt-6">
+            <CalendarComponent />
+          </div>
         </div>
         
         {/* Recommended investors */}

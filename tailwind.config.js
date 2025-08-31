@@ -5,62 +5,54 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
-          950: '#172554',
-        },
-        secondary: {
-          50: '#F0FDFA',
-          100: '#CCFBF1',
-          200: '#99F6E4',
-          300: '#5EEAD4',
-          400: '#2DD4BF',
-          500: '#14B8A6',
-          600: '#0D9488',
-          700: '#0F766E',
-          800: '#115E59',
-          900: '#134E4A',
-          950: '#042F2E',
-        },
-        accent: {
-          50: '#FFFBEB',
-          100: '#FEF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
-          950: '#451A03',
+          50:  '#e0e7ff',
+          100: '#c7d2fe',
+          200: '#a5b4fc',
+          300: '#818cf8',
+          400: '#6366f1',
+          500: '#06b6d4', // Cyan
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
         },
         success: {
-          50: '#F0FDF4',
-          500: '#22C55E',
-          700: '#15803D',
+          500: '#22c55e',
+          600: '#16a34a',
         },
         warning: {
-          50: '#FFFBEB',
-          500: '#F59E0B',
-          700: '#B45309',
+          500: '#facc15',
+          600: '#eab308',
+        },
+        text: {
+          DEFAULT: '#000000', // All text is black by default
+        },
+        secondary: {
+          500: '#000000', // Black for secondary text
+          600: '#000000',
+        },
+        accent: {
+          500: '#000000', // Black for accent text
+          600: '#000000',
         },
         error: {
-          50: '#FEF2F2',
-          500: '#EF4444',
-          700: '#B91C1C',
+          500: '#000000', // Black for error text
+          600: '#000000',
         },
+        info: {
+          500: '#000000', // Black for info text
+          600: '#000000',
+        },
+        background: '#ffffff',
+        surface: '#f3f4f6',
       },
       fontFamily: {
-        sans: ['Inter var', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        heading: ['Montserrat', 'ui-sans-serif', 'system-ui'],
+      },
+      container: {
+        center: true,
+        padding: '1rem',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

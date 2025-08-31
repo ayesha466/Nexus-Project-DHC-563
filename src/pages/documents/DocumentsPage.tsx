@@ -3,6 +3,7 @@ import { FileText, Upload, Download, Trash2, Share2 } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
+import DocumentChamber from '../../components/ui/DocumentChamber';
 
 const documents = [
   {
@@ -42,6 +43,8 @@ const documents = [
 export const DocumentsPage: React.FC = () => {
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Document Chamber Section */}
+      <DocumentChamber />
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Documents</h1>

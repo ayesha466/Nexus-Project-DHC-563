@@ -12,6 +12,19 @@ export const LoginPage: React.FC = () => {
   const [role, setRole] = useState<UserRole>('entrepreneur');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<'login' | 'otp'>('login');
+  const [otp, setOtp] = useState('');
+
+  // Password strength meter
+  const getPasswordStrength = (pwd: string = '') => {
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return score;
+  };
+  const strength = getPasswordStrength(password || '');
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -20,14 +33,28 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    
-    try {
-      await login(email, password, role);
-      // Redirect based on user role
-      navigate(role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor');
-    } catch (err) {
-      setError((err as Error).message);
-      setIsLoading(false);
+    if (step === 'login') {
+      // Simulate password check, then go to OTP step
+      setTimeout(() => {
+        setStep('otp');
+        setIsLoading(false);
+      }, 700);
+    } else if (step === 'otp') {
+      // Validate OTP (demo: must be '123456')
+      if (otp !== '123456') {
+        setError('Invalid OTP. Please enter the 6-digit code sent to your email.');
+        setIsLoading(false);
+        return;
+      }
+      setTimeout(async () => {
+        try {
+          await login(email, password, role);
+          navigate(role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor');
+        } catch (err) {
+          setError((err as Error).message);
+          setIsLoading(false);
+        }
+      }, 700);
     }
   };
   
@@ -105,24 +132,52 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
             
-            <Input
-              label="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              fullWidth
-              startAdornment={<User size={18} />}
-            />
-            
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-            />
+            {step === 'login' && (
+              <>
+                <Input
+                  label="Email address"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  fullWidth
+                  startAdornment={<User size={18} />}
+                />
+                <Input
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  fullWidth
+                />
+                {/* Password strength meter */}
+                <div className="mt-2 h-2 w-full bg-gray-200 rounded-full">
+                  <div
+                    className={`h-2 rounded-full ${strength === 1 ? 'bg-red-500 w-1/4' : strength === 2 ? 'bg-yellow-500 w-2/4' : strength === 3 ? 'bg-blue-500 w-3/4' : strength === 4 ? 'bg-green-500 w-full' : 'bg-gray-200 w-0'}`}
+                  ></div>
+                </div>
+                <div className="text-xs mt-1 text-gray-500">
+                  {strength === 1 && 'Weak'}
+                  {strength === 2 && 'Fair'}
+                  {strength === 3 && 'Good'}
+                  {strength === 4 && 'Strong'}
+                </div>
+              </>
+            )}
+            {step === 'otp' && (
+              <>
+                <Input
+                  label="Enter OTP (2FA)"
+                  type="text"
+                  value={otp}
+                  onChange={e => setOtp(e.target.value)}
+                  required
+                  fullWidth
+                />
+                <div className="text-xs mt-1 text-gray-500">A 6-digit code was sent to your email.</div>
+              </>
+            )}
             
             <div className="flex items-center justify-between">
               <div className="flex items-center">
